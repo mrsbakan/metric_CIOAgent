@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentMetric — ChatBot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/chatbot.css">
+<link rel="stylesheet" href="styles/layout-components.css">
+<link rel="stylesheet" href="styles/notifications.css">
+</head>
+<body>
+
+<!-- ===================== APP SHELL ===================== -->
+<div class="am-shell" data-screen-label="ChatBot">
+
+  <!-- ============ MAIN SIDEBAR ============ -->
+  <app-sidebar active="chat"></app-sidebar>
+
+  <!-- ============ THREADS ============ -->
+  <aside class="threads" id="threadsPanel">
+    <div class="threads-head">
+      <strong class="threads-head-title">Conversations</strong>
+      <button class="btn btn-primary btn-sm threads-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        New
+      </button>
+    </div>
+    <div class="threads-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input placeholder="Search conversations…" />
+    </div>
+    <div class="threads-list">
+      <div class="thread-group-label">Today</div>
+
+      <div class="thread" data-active="true">
+        <div class="title">
+          <span class="t-truncate">Q3 Sprint risk review</span>
+          <span class="badge badge-primary">2</span>
+        </div>
+        <div class="preview">Show me which projects are at risk this sprint…</div>
+        <div class="meta">
+          <span class="src">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>
+            JIRA · Spirai
+          </span>
+          <span>·</span>
+          <span>14:22</span>
+        </div>
+      </div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">SLA breaches — INC-9921</span></div>
+        <div class="preview">Escalation triggered for ServiceNow incident…</div>
+        <div class="meta">
+          <span class="src">ServiceNow</span><span>·</span><span>11:08</span>
+        </div>
+      </div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">Onboarding agent — IT Manager role</span></div>
+        <div class="preview">Define a new IT Manager role with…</div>
+        <div class="meta">
+          <span class="src">Configuration</span><span>·</span><span>09:14</span>
+        </div>
+      </div>
+
+      <div class="thread-group-label">This week</div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">OKR draft — reduce SLA breaches</span></div>
+        <div class="preview">Generated 3 KR candidates from project signals…</div>
+        <div class="meta">
+          <span class="src">Spirai</span><span>·</span><span>Yesterday</span>
+        </div>
+      </div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">Skill: Sprint summary v2</span></div>
+        <div class="preview">Updated criteria for risk surfacing…</div>
+        <div class="meta">
+          <span class="src">Skills</span><span>·</span><span>Mon</span>
+        </div>
+      </div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">Azure DevOps connector setup</span></div>
+        <div class="preview">Walk me through the auth options…</div>
+        <div class="meta">
+          <span class="src">Connectors</span><span>·</span><span>Mon</span>
+        </div>
+      </div>
+
+      <div class="thread-group-label">Earlier</div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">Portfolio health Q2</span></div>
+        <div class="preview">Aggregated signals across 8 projects…</div>
+        <div class="meta"><span class="src">Multiple</span><span>·</span><span>Apr 28</span></div>
+      </div>
+
+      <div class="thread">
+        <div class="title"><span class="t-truncate">D&amp;A team velocity dip</span></div>
+        <div class="preview">Two consecutive sprints below baseline…</div>
+        <div class="meta"><span class="src">JIRA</span><span>·</span><span>Apr 22</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ CONVERSATION ============ -->
+  <main class="convo" id="convo">
+
+    <!-- Convo header -->
+    <header class="convo-head">
+      <button class="btn btn-icon btn-sm btn-ghost chat-back-btn" id="openThreads">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <div class="title-block">
+        <div class="title">Q3 Sprint risk review</div>
+        <div class="sub">
+          <span class="status-dot online"></span>
+          Agent online · 8 messages · 23 credits used
+        </div>
+      </div>
+      <button class="btn btn-icon btn-sm btn-ghost" title="Pin">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M9 9V2h6v7M5 13l3-4h8l3 4-7 4z"/></svg>
+      </button>
+      <button class="btn btn-icon btn-sm btn-ghost" id="toggleContext" title="Toggle context">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg>
+      </button>
+      <button class="btn btn-icon btn-sm btn-ghost" title="More">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+    </header>
+
+    <!-- Context strip -->
+    <div class="convo-context">
+      <span class="context-label">Context</span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
+        Role · CIO
+      </span>
+      <span class="chip chip-removable">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Project · PROJ-118
+        <button class="chip-close" aria-label="Remove">×</button>
+      </span>
+      <span class="chip chip-removable">
+        Source · JIRA
+        <button class="chip-close">×</button>
+      </span>
+      <span class="chip chip-removable">
+        Source · Spirai
+        <button class="chip-close">×</button>
+      </span>
+      <button class="chip chip-dashed">
+        + Add context
+      </button>
+    </div>
+
+    <!-- Stream -->
+    <div class="convo-stream" id="stream">
+      <div class="stream-inner">
+
+        <!-- User message -->
+        <div class="msg user">
+          <span class="msg-avatar">SB</span>
+          <div class="msg-body">
+            <div class="msg-meta">
+              <span class="name">You</span>
+              <span class="when">14:18 · 2 min ago</span>
+            </div>
+            <div class="msg-content">
+              <p>Show me which projects are at risk in the current sprint, and propose actions for the top 2.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent reply 1 -->
+        <div class="msg agent">
+          <span class="msg-avatar">am</span>
+          <div class="msg-body">
+            <div class="msg-meta">
+              <span class="name">CIO Agent</span>
+              <span class="when">14:18</span>
+              <span class="badge badge-primary badge-dot">Skill · sprint_health</span>
+            </div>
+            <div class="msg-content">
+              <p>I'll pull live sprint signals from JIRA and cross-check against Spirai OKRs. Reading 3 connectors…</p>
+
+              <!-- Tool call card -->
+              <div class="tool-card">
+                <div class="tool-head">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.78 1.02 6.41 2.66"/><path d="M21 3v6h-6"/></svg>
+                  <span class="name">jira.read</span>
+                  <span class="src">project=PROJ-* · sprint=active</span>
+                  <span class="check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                </div>
+                <div class="tool-body">
+                  <div class="tool-row">
+                    <span class="id">PROJ-118</span>
+                    <span class="label">CRM Migration · Sprint 14</span>
+                    <span class="badge badge-danger badge-dot">14d behind</span>
+                    <span class="t-mono t-muted risk-score">risk · 0.82</span>
+                  </div>
+                  <div class="tool-row">
+                    <span class="id">PROJ-204</span>
+                    <span class="label">SSO Rollout · Sprint 7</span>
+                    <span class="badge badge-warning badge-dot">5d behind</span>
+                    <span class="t-mono t-muted risk-score">risk · 0.61</span>
+                  </div>
+                  <div class="tool-row">
+                    <span class="id">PROJ-091</span>
+                    <span class="label">Data Lake v2 · Sprint 22</span>
+                    <span class="badge badge-warning badge-dot">2d behind</span>
+                    <span class="t-mono t-muted risk-score">risk · 0.43</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="p-spaced">Three projects are off-track. <strong>PROJ-118</strong> is the most critical — velocity dropped 38% over two sprints, and KR3 in Spirai is unchanged for 18 days.</p>
+
+              <p>I can take two actions for you. The first is <em>Draft</em> (one-click approve), the second requires explicit approval per your role matrix.</p>
+            </div>
+
+            <!-- Action draft 1 -->
+            <div class="action-card">
+              <div class="action-head">
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+                <div class="name-block">
+                  <div class="name">Open task in JIRA</div>
+                  <div class="desc">Investigate velocity drop on PROJ-118 · assigned to Tech Lead</div>
+                </div>
+                <span class="badge badge-warning">Draft</span>
+              </div>
+              <div class="action-body">
+                <div class="action-row"><span class="k">Action</span><span class="v code">jira.write · create_issue</span></div>
+                <div class="action-row"><span class="k">Project</span><span class="v">PROJ-118 · CRM Migration</span></div>
+                <div class="action-row"><span class="k">Type</span><span class="v">Task · Priority High</span></div>
+                <div class="action-row"><span class="k">Assignee</span><span class="v">erdem.m@company.com</span></div>
+                <div class="action-row"><span class="k">Title</span><span class="v">Investigate sprint 14 velocity drop (–38%)</span></div>
+                <div class="action-row"><span class="k">Idem. key</span><span class="v code">7f4e2d-91a · single-use</span></div>
+              </div>
+              <div class="action-foot">
+                <span class="cost">Cost · 5 credits</span>
+                <button class="btn btn-ghost btn-sm">Reject</button>
+                <button class="btn btn-secondary btn-sm">Edit</button>
+                <button class="btn btn-primary btn-sm">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  Approve &amp; send
+                </button>
+              </div>
+              <div class="status-banner">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                Pre-validated · idempotency check passed · agent has write permission
+              </div>
+            </div>
+
+            <!-- Action draft 2 (approval required) -->
+            <div class="action-card">
+              <div class="action-head">
+                <span class="icon warning">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                </span>
+                <div class="name-block">
+                  <div class="name">Update KR3 in Spirai</div>
+                  <div class="desc">Reflect 14-day delay risk on Q3 OKR · "Reduce CRM TTM"</div>
+                </div>
+                <span class="badge badge-danger">Approval required</span>
+              </div>
+              <div class="action-body">
+                <div class="action-row"><span class="k">Action</span><span class="v code">spirai.write · update_kr</span></div>
+                <div class="action-row"><span class="k">OKR</span><span class="v">Q3 · Reduce CRM time-to-market</span></div>
+                <div class="action-row"><span class="k">Key Result</span><span class="v">KR3 · Cutover by Aug 15</span></div>
+                <div class="action-row"><span class="k">Update</span><span class="v">Status → At risk · projected slip 14d</span></div>
+                <div class="action-row"><span class="k">Visible to</span><span class="v">D&amp;A Manager, IT Manager, CIO</span></div>
+              </div>
+              <div class="action-foot">
+                <span class="cost">Cost · 5 credits · 48h timeout</span>
+                <button class="btn btn-ghost btn-sm">Reject</button>
+                <button class="btn btn-secondary btn-sm">Edit before send</button>
+                <button class="btn btn-primary btn-sm">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  Approve
+                </button>
+              </div>
+            </div>
+
+            <div class="suggestions">
+              <button class="suggestion">Show full risk breakdown for PROJ-118</button>
+              <button class="suggestion">Notify the project owner</button>
+              <button class="suggestion">Compare to last 3 sprints</button>
+              <button class="suggestion">Schedule a check-in</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User reply -->
+        <div class="msg user">
+          <span class="msg-avatar">SB</span>
+          <div class="msg-body">
+            <div class="msg-meta">
+              <span class="name">You</span>
+              <span class="when">14:21 · just now</span>
+            </div>
+            <div class="msg-content">
+              <p>Approve the JIRA task. Hold the OKR update — let me see KR3 history first.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent streaming reply -->
+        <div class="msg agent">
+          <span class="msg-avatar">am</span>
+          <div class="msg-body">
+            <div class="msg-meta">
+              <span class="name">CIO Agent</span>
+              <span class="when">14:22 · streaming</span>
+              <span class="badge badge-info badge-dot">Tool · jira.write</span>
+            </div>
+            <div class="msg-content" id="streamingContent">
+              <p>Done. Task <code>IT-2041</code> created in JIRA, assigned to Erdem M., due in 5 working days. The OKR update is still pending — pulling KR3 history now<span class="stream-cursor"></span></p>
+            </div>
+
+            <div class="action-card completed">
+              <div class="action-head">
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                </span>
+                <div class="name-block">
+                  <div class="name">JIRA task created · IT-2041</div>
+                  <div class="desc">Investigate sprint 14 velocity drop (–38%) · Erdem M. · due May 14</div>
+                </div>
+                <span class="badge badge-success badge-dot">Completed</span>
+              </div>
+              <div class="action-foot">
+                <span class="cost">5 credits used · trace 7f4e2d-91a</span>
+                <button class="btn btn-ghost btn-sm">View in JIRA</button>
+                <button class="btn btn-ghost btn-sm">Audit trail</button>
+              </div>
+            </div>
+
+            <div class="thinking spaced">
+              <span class="dots"><span></span><span></span><span></span></span>
+              Reading KR3 history from Spirai · 18 events
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Composer -->
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea class="composer-input" id="composerInput" placeholder="Ask the agent or type / for commands…" rows="1"></textarea>
+
+        <!-- Slash menu (hidden by default) -->
+        <div class="slash-menu" id="slashMenu">
+          <div class="slash-item" data-active="true">
+            <span class="key">/alert</span>
+            <span>Create an event-driven alert</span>
+            <span class="desc">→ enter</span>
+          </div>
+          <div class="slash-item">
+            <span class="key">/skill</span>
+            <span>Define or edit a skill</span>
+          </div>
+          <div class="slash-item">
+            <span class="key">/okr</span>
+            <span>Draft an OKR or KR in Spirai</span>
+          </div>
+          <div class="slash-item">
+            <span class="key">/task</span>
+            <span>Open a task in JIRA / SNow / Azure</span>
+          </div>
+          <div class="slash-item">
+            <span class="key">/escalate</span>
+            <span>Escalate to next role</span>
+          </div>
+          <div class="slash-item">
+            <span class="key">/digest</span>
+            <span>Run a digest skill on demand</span>
+          </div>
+        </div>
+
+        <div class="composer-bar">
+          <div class="composer-tools">
+            <button class="composer-tool" title="Attach">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <button class="composer-tool" title="Mention">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+            </button>
+            <button class="composer-tool" title="Slash commands" id="slashBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 20L17 4"/></svg>
+            </button>
+            <button class="composer-tool" title="Voice">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+            </button>
+          </div>
+          <button class="send" id="sendBtn" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="composer-meta">
+        <span><kbd>↵</kbd> Send</span>
+        <span><kbd>⇧↵</kbd> New line</span>
+        <span><kbd>/</kbd> Commands</span>
+        <span class="spacer"></span>
+        <span>Streaming · llama-3.1-70b · context 8/30%</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============ CONTEXT PANEL ============ -->
+  <aside class="context-panel" id="contextPanel">
+    <div class="context-head">
+      <strong class="title">Conversation context</strong>
+      <button class="btn btn-icon btn-sm btn-ghost" id="closeContext">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="context-body">
+
+      <!-- Pending actions -->
+      <div class="context-section">
+        <h4>Pending in this thread · 1</h4>
+        <div class="pending-mini">
+          <div class="head">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            Update KR3 in Spirai
+          </div>
+          <div class="desc">Awaiting your approval · 47h 12m left</div>
+          <div class="actions">
+            <button class="btn btn-primary btn-sm btn-grow">Approve</button>
+            <button class="btn btn-secondary btn-sm">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active connectors -->
+      <div class="context-section">
+        <h4>Active connectors</h4>
+        <div class="context-row">
+          <span class="status-dot online"></span>
+          <span class="k">JIRA</span>
+          <span class="v v-meta">12 reads · 1 write</span>
+        </div>
+        <div class="context-row">
+          <span class="status-dot online"></span>
+          <span class="k">Spirai</span>
+          <span class="v v-meta">3 reads · 0 writes</span>
+        </div>
+        <div class="context-row">
+          <span class="status-dot warn"></span>
+          <span class="k">ServiceNow</span>
+          <span class="v v-meta">degraded · 2.4s p95</span>
+        </div>
+        <div class="context-row">
+          <span class="status-dot offline"></span>
+          <span class="k">Azure DevOps</span>
+          <span class="v v-meta">not used</span>
+        </div>
+      </div>
+
+      <!-- Skills active -->
+      <div class="context-section">
+        <h4>Skills used</h4>
+        <div class="context-row"><span class="k">sprint_health</span><span class="v">v3.1</span></div>
+        <div class="context-row"><span class="k">okr_quality</span><span class="v">v1.4</span></div>
+        <div class="context-row"><span class="k">risk_scoring</span><span class="v">v2.0</span></div>
+      </div>
+
+      <!-- Memory layers -->
+      <div class="context-section">
+        <h4>Memory access</h4>
+        <div class="context-row"><span class="k">Private (you)</span><span class="v">14 keys</span></div>
+        <div class="context-row"><span class="k">Role · CIO</span><span class="v">62 keys</span></div>
+        <div class="context-row"><span class="k">Shared</span><span class="v">218 keys</span></div>
+      </div>
+
+      <!-- Credit usage -->
+      <div class="context-section">
+        <h4>Credit usage</h4>
+        <div class="credits-widget">
+          <div class="credits-head">
+            <strong class="total">23 <span class="of">/ 25,000</span></strong>
+            <span class="scope">this thread</span>
+          </div>
+          <div class="credits-bar"><div class="credits-fill-tiny"></div></div>
+          <div class="credits-legend">
+            <span>RAG · 10</span>
+            <span>Skills · 8</span>
+            <span>Writes · 5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit -->
+      <div class="context-section">
+        <h4>Audit trail · last 5</h4>
+        <div class="audit-list">
+          <div class="audit-row"><span class="t-mono">14:22:08</span><span class="label">jira.write IT-2041</span><span class="badge badge-success">ok</span></div>
+          <div class="audit-row"><span class="t-mono">14:21:55</span><span class="label">approval · jira_task</span><span class="badge badge-success">approved</span></div>
+          <div class="audit-row"><span class="t-mono">14:18:33</span><span class="label">spirai.read kr_history</span><span class="badge">ok</span></div>
+          <div class="audit-row"><span class="t-mono">14:18:12</span><span class="label">jira.read sprint_active</span><span class="badge">ok</span></div>
+          <div class="audit-row"><span class="t-mono">14:18:02</span><span class="label">session.start</span><span class="badge">ok</span></div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <div class="am-backdrop" id="backdrop"></div>
+</div>
+
+<script>
+  // Composer auto-grow
+  const input = document.getElementById('composerInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const slashMenu = document.getElementById('slashMenu');
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 200) + 'px';
+    sendBtn.disabled = !input.value.trim();
+    slashMenu.dataset.open = input.value.startsWith('/') ? 'true' : 'false';
+  });
+  document.getElementById('slashBtn').addEventListener('click', () => {
+    slashMenu.dataset.open = slashMenu.dataset.open === 'true' ? 'false' : 'true';
+    input.focus();
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.composer')) slashMenu.dataset.open = 'false';
+  });
+
+  // Mobile threads
+  const threads = document.getElementById('threadsPanel');
+  const backdrop = document.getElementById('backdrop');
+  document.getElementById('openThreads').addEventListener('click', () => {
+    threads.dataset.mobileOpen = 'true';
+    backdrop.dataset.open = 'true';
+  });
+  backdrop.addEventListener('click', () => {
+    threads.dataset.mobileOpen = 'false';
+    document.getElementById('contextPanel').dataset.mobileOpen = 'false';
+    backdrop.dataset.open = 'false';
+  });
+
+  // Context toggle
+  const ctx = document.getElementById('contextPanel');
+  document.getElementById('toggleContext').addEventListener('click', () => {
+    if (window.innerWidth <= 1100) {
+      ctx.dataset.mobileOpen = 'true';
+      backdrop.dataset.open = 'true';
+    } else {
+      ctx.dataset.collapsed = ctx.dataset.collapsed === 'true' ? 'false' : 'true';
+    }
+  });
+  document.getElementById('closeContext').addEventListener('click', () => {
+    if (window.innerWidth <= 1100) {
+      ctx.dataset.mobileOpen = 'false';
+      backdrop.dataset.open = 'false';
+    } else {
+      ctx.dataset.collapsed = 'true';
+    }
+  });
+
+  // Auto-scroll stream to bottom
+  const stream = document.getElementById('stream');
+  stream.scrollTop = stream.scrollHeight;
+
+  // Streaming text simulation
+  const streamingEl = document.getElementById('streamingContent');
+  if (streamingEl) {
+    const fullText = `<p>Done. Task <code>IT-2041</code> created in JIRA, assigned to Erdem M., due in 5 working days. The OKR update is still pending — pulling KR3 history now.</p><p>Looks like KR3 has shifted target dates twice in the last 30 days. The trend supports the at-risk classification I proposed earlier.</p><p>Want me to also schedule a 15-min sync with the project owner before you decide on the OKR update?</p>`;
+    // Already showing static content — for demo, just append the rest after a delay
+    setTimeout(() => {
+      streamingEl.innerHTML = fullText;
+      stream.scrollTop = stream.scrollHeight;
+    }, 2200);
+  }
+</script>
+
+<app-notifications-panel></app-notifications-panel>
+
+<script src="components/sidebar.js"></script>
+<script src="components/topbar.js"></script>
+<script src="components/notifications-panel.js"></script>
+
+</body>
+</html>

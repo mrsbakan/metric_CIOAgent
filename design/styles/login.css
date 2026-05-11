@@ -1,0 +1,214 @@
+/* AgentMetric — Login / Auth page styles */
+
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background: var(--bg);
+}
+
+.login-panel {
+  display: flex; flex-direction: column;
+  padding: 40px 56px;
+  background: var(--bg);
+  min-height: 100vh;
+  width: 100%;
+  max-width: 560px;
+}
+@media (max-width: 600px) { .login-panel { padding: 24px; } }
+
+.login-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: auto;
+}
+
+.login-tenant {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  font-size: 12px; color: var(--text-muted);
+  cursor: pointer;
+  background: var(--surface);
+}
+.login-tenant strong { color: var(--text); font-weight: 500; }
+
+.login-form-wrap {
+  width: 100%; max-width: 380px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.login-title {
+  font-size: 28px; font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1.15;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+.login-sub {
+  font-size: 14px; color: var(--text-muted);
+  margin: 0 0 32px;
+  line-height: 1.55;
+}
+
+.login-form { display: flex; flex-direction: column; gap: 14px; }
+
+.field-label {
+  font-size: 12px; font-weight: 500;
+  color: var(--text); margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.field-label a {
+  font-size: 12px; color: var(--brand-600);
+  text-decoration: none;
+}
+.field-label a:hover { text-decoration: underline; }
+
+.input-with-icon { position: relative; }
+.input-with-icon > svg {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; color: var(--text-subtle);
+  pointer-events: none;
+}
+.input-with-icon .input { padding-left: 36px; }
+
+.input-pw-toggle {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 24px; height: 24px;
+  border: none; background: transparent;
+  cursor: pointer; color: var(--text-subtle);
+  border-radius: var(--r-xs);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.input-pw-toggle:hover { color: var(--text); background: var(--surface-2); }
+
+.login-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text-muted);
+}
+.login-row label.inline {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer;
+}
+
+.login-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 24px 0;
+  font-size: 11px; color: var(--text-subtle);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.login-divider::before,
+.login-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.sso-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.sso-btn {
+  display: flex; align-items: center; gap: 10px;
+  height: 40px; padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--text); font-family: inherit;
+  transition: all 120ms ease;
+  width: 100%;
+}
+.sso-btn:hover { background: var(--surface-2); border-color: var(--n-400); }
+.sso-btn .sso-logo {
+  width: 20px; height: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--r-xs);
+  flex-shrink: 0;
+}
+.sso-btn .sso-meta {
+  margin-left: auto;
+  font-size: 11px; color: var(--text-subtle);
+}
+
+/* SSO logo color variants — token-only */
+.sso-logo-microsoft { background: linear-gradient(135deg, #0078d4, #003c70); }
+.sso-logo-okta { background: var(--n-950); }
+.sso-logo-corp { background: var(--n-100); border: 1px solid var(--border); }
+[data-theme="dark"] .sso-logo-corp { background: var(--surface-2); }
+
+.login-foot {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; color: var(--text-subtle);
+}
+.login-foot a { color: var(--text-muted); text-decoration: none; }
+.login-foot a:hover { color: var(--text); }
+.login-foot .links { display: flex; gap: 16px; }
+
+/* === States === */
+.auth-state { display: none; }
+.auth-state[data-active="true"] { display: flex; flex-direction: column; }
+
+/* === MFA === */
+.otp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.otp-input {
+  height: 52px; text-align: center;
+  font-size: 22px; font-weight: 600;
+  font-family: var(--font-mono);
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-md);
+  color: var(--text);
+  transition: all 120ms ease;
+}
+.otp-input:focus {
+  outline: none;
+  border-color: var(--brand-600);
+  box-shadow: var(--shadow-focus);
+}
+
+/* === SSO redirect === */
+.sso-loading {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 0;
+  text-align: center;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--brand-600);
+  border-radius: 50%;
+  animation: login-spin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+@keyframes login-spin { to { transform: rotate(360deg); } }
+
+/* === Demo state switcher === */
+.state-switcher {
+  position: fixed; bottom: 16px; left: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 4px;
+  display: flex; gap: 2px;
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  font-size: 11px;
+}
+.state-switcher button {
+  padding: 6px 10px;
+  background: transparent; border: none;
+  border-radius: var(--r-xs); cursor: pointer;
+  color: var(--text-muted); font-family: inherit;
+  font-size: 11px;
+}
+.state-switcher button[data-active="true"] {
+  background: var(--brand-600); color: var(--n-0);
+}
+.state-switcher .label {
+  padding: 6px 8px; color: var(--text-subtle);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+}

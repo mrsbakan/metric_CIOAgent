@@ -1,0 +1,8 @@
+/* AgentMetric — Layout web components host styles
+   These let custom elements behave as if they were the actual layout containers. */
+
+app-sidebar { display: contents; }
+app-topbar { display: contents; }
+app-notifications-panel { display: contents; }
+app-profile-menu { display: contents; }
+app-footer-bar { display: contents; }

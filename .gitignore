@@ -1,3 +1,6 @@
+# Design files are read-only reference
+# design/ klasörüne dokunma (Claude Code)
+
 # Dependencies
 node_modules/
 .pnp
@@ -52,3 +55,5 @@ Thumbs.db
 
 # k6 results
 k6-results/
+
+

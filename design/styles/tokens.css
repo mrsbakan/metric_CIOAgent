@@ -1,0 +1,98 @@
+/* AgentMetric — Design tokens (shared across all modules) */
+:root {
+  /* Brand — Crimson (Rose-600) */
+  --brand-50:  #fff1f2;
+  --brand-100: #ffe1e3;
+  --brand-200: #ffc7cb;
+  --brand-300: #ffa0a7;
+  --brand-400: #ff6b75;
+  --brand-500: #f43f5e;
+  --brand-600: #e11d48;
+  --brand-700: #be123c;
+  --brand-800: #9f1239;
+  --brand-900: #7f1d3a;
+
+  /* Neutrals */
+  --n-0:   #ffffff;
+  --n-50:  #fafafa;
+  --n-100: #f5f5f5;
+  --n-150: #ececec;
+  --n-200: #e5e5e5;
+  --n-300: #d4d4d4;
+  --n-400: #a3a3a3;
+  --n-500: #737373;
+  --n-600: #525252;
+  --n-700: #404040;
+  --n-800: #262626;
+  --n-900: #171717;
+  --n-950: #0a0a0a;
+
+  /* Semantic */
+  --success: #10b981;
+  --success-bg: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --danger:  #ef4444;
+  --danger-bg: #fef2f2;
+  --info:    #3b82f6;
+  --info-bg: #eff6ff;
+
+  /* Surface (light default) */
+  --bg:        var(--n-50);
+  --surface:   var(--n-0);
+  --surface-2: var(--n-100);
+  --surface-3: var(--n-150);
+  --border:    var(--n-200);
+  --border-strong: var(--n-300);
+  --text:      var(--n-900);
+  --text-muted:var(--n-500);
+  --text-subtle:var(--n-400);
+
+  --font-sans: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 20px;
+  --r-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  --shadow-xl: 0 20px 50px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06);
+  --shadow-focus: 0 0 0 3px var(--brand-100);
+}
+
+[data-theme="dark"] {
+  --bg:        #0a0a0a;
+  --surface:   #131313;
+  --surface-2: #1a1a1a;
+  --surface-3: #222222;
+  --border:    #262626;
+  --border-strong: #333333;
+  --text:      #fafafa;
+  --text-muted:#a3a3a3;
+  --text-subtle:#737373;
+  --shadow-focus: 0 0 0 3px rgba(225,29,72,0.25);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }

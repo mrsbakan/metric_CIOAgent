@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentMetric — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/home.css">
+<link rel="stylesheet" href="styles/layout-components.css">
+<link rel="stylesheet" href="styles/notifications.css">
+</head>
+<body>
+
+<div class="home-shell" data-screen-label="Home">
+
+  <!-- ============ MAIN SIDEBAR ============ -->
+  <app-sidebar active="home"></app-sidebar>
+
+  <!-- ============ MAIN ============ -->
+  <main class="home-main">
+
+    <app-topbar variant="home"
+                greeting="Good afternoon, Satılmış"
+                sub="Wednesday · 7 May · 14:22"
+                cta="New conversation"
+                cta-href="chatbot.html"></app-topbar>
+
+    <!-- Hero / ask agent -->
+    <section class="home-hero">
+      <h1>What's on your <em>mind</em>, Satılmış?</h1>
+      <p>Your agent has been working overnight — 3 critical signals to review and 12 actions waiting for your approval.</p>
+
+      <div class="ask-agent">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-600)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <input placeholder="Ask the agent — e.g. 'why did D&A velocity drop this sprint?'" />
+        <button class="send" title="Send">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="starter-chips">
+        <button class="starter-chip"><strong>/ask</strong> Show projects at risk this sprint</button>
+        <button class="starter-chip"><strong>/ask</strong> Summarize SLA breaches last 7 days</button>
+        <button class="starter-chip"><strong>/ask</strong> Draft Q3 OKR review</button>
+        <button class="starter-chip"><strong>/skill</strong> Run morning digest</button>
+        <button class="starter-chip"><strong>/escalate</strong> INC-9921</button>
+      </div>
+    </section>
+
+    <!-- Body grid -->
+    <div class="home-body">
+
+      <!-- LEFT COLUMN -->
+      <div class="home-col">
+
+        <!-- KPIs -->
+        <div>
+          <div class="sec-head">
+            <h3>Today at a glance</h3>
+            <span class="count">last 24h</span>
+            <div class="spacer"></div>
+            <a href="dashboard.html">Open dashboard →</a>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi">
+              <span class="label">Active agents</span>
+              <span class="value">14</span>
+              <span class="delta up">▲ 2 vs yesterday</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Actions executed</span>
+              <span class="value">186</span>
+              <span class="delta up">▲ 18%</span>
+              <svg class="spark" viewBox="0 0 100 28" preserveAspectRatio="none">
+                <polyline fill="none" stroke="var(--brand-600)" stroke-width="1.5"
+                  points="0,20 12,18 24,22 36,15 48,17 60,12 72,14 84,8 100,10"/>
+                <polyline fill="rgba(225,29,72,0.08)" stroke="none"
+                  points="0,20 12,18 24,22 36,15 48,17 60,12 72,14 84,8 100,10 100,28 0,28"/>
+              </svg>
+            </div>
+            <div class="kpi">
+              <span class="label">Pending approvals</span>
+              <span class="value t-brand">12</span>
+              <span class="delta down">▲ 4 since 09:00</span>
+            </div>
+            <div class="kpi">
+              <span class="label">Credits used (mo)</span>
+              <span class="value">38.2k</span>
+              <span class="delta neutral">76% of budget</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical insight banner -->
+        <div>
+          <div class="sec-head">
+            <h3>Critical insight</h3>
+            <span class="count danger">1 new</span>
+            <div class="spacer"></div>
+            <a href="#">View all 4 insights →</a>
+          </div>
+          <div class="insight-banner">
+            <span class="icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 22h20L12 2z"/><path d="M12 9v5M12 17h.01"/></svg>
+            </span>
+            <div class="body">
+              <h4>
+                CRM Migration is 14 days behind its target cutover
+                <span class="badge badge-danger badge-dot">PROJ-118</span>
+              </h4>
+              <p>Velocity dropped 38% over two sprints, KR3 unchanged for 18 days, and 3 key ICs are flagged as blocked. The agent recommends opening an investigation task and updating Q3 OKR status to <strong>at risk</strong>.</p>
+              <div class="actions">
+                <button class="btn btn-primary btn-sm">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Open in agent
+                </button>
+                <button class="btn btn-secondary btn-sm">Approve recommended actions (2)</button>
+                <button class="btn btn-ghost btn-sm">Snooze 24h</button>
+              </div>
+              <div class="meta">detected · 14:18 · skill=sprint_health · confidence 0.91</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active alerts & escalations -->
+        <div>
+          <div class="sec-head">
+            <h3>Alerts &amp; escalations</h3>
+            <span class="count danger">3 open</span>
+            <div class="spacer"></div>
+            <a href="#">View audit log →</a>
+          </div>
+          <div class="alert-list">
+
+            <div class="alert-row">
+              <span class="sev critical"></span>
+              <div class="body">
+                <div class="title">
+                  ServiceNow incident escalated to L3
+                  <span class="badge badge-danger badge-dot">SLA breach</span>
+                </div>
+                <div class="desc">INC-9921 — Customer portal latency, 14m past SLA. Auto-escalated by alert rule "<code>p1_sla_breach</code>".</div>
+                <div class="meta">
+                  <span class="src">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>
+                    ServiceNow
+                  </span>
+                  <span>·</span>
+                  <span>14:08 · 14m ago</span>
+                  <span>·</span>
+                  <span>owner: ops-team</span>
+                </div>
+              </div>
+              <div class="controls">
+                <button class="btn btn-secondary btn-sm">Acknowledge</button>
+                <button class="btn btn-primary btn-sm">Open in agent</button>
+              </div>
+            </div>
+
+            <div class="alert-row">
+              <span class="sev warning"></span>
+              <div class="body">
+                <div class="title">
+                  Velocity drop detected — D&amp;A team
+                  <span class="badge badge-warning badge-dot">2 sprints below baseline</span>
+                </div>
+                <div class="desc">Average story points per sprint dropped from 42 → 26 in the last two sprints. 3 ICs flagged blocked.</div>
+                <div class="meta">
+                  <span class="src">JIRA · Spirai</span>
+                  <span>·</span>
+                  <span>11:30 · 2h ago</span>
+                  <span>·</span>
+                  <span>skill=velocity_watch</span>
+                </div>
+              </div>
+              <div class="controls">
+                <button class="btn btn-ghost btn-sm">Dismiss</button>
+                <button class="btn btn-secondary btn-sm">Investigate</button>
+              </div>
+            </div>
+
+            <div class="alert-row">
+              <span class="sev warning"></span>
+              <div class="body">
+                <div class="title">
+                  Connector degraded — ServiceNow API latency
+                </div>
+                <div class="desc">p95 response time at 2.4s (threshold 1.5s). Reads still working, writes queued.</div>
+                <div class="meta">
+                  <span class="src">Connector health</span>
+                  <span>·</span>
+                  <span>13:55 · 27m ago</span>
+                </div>
+              </div>
+              <div class="controls">
+                <button class="btn btn-ghost btn-sm">Dismiss</button>
+                <button class="btn btn-secondary btn-sm">Open settings</button>
+              </div>
+            </div>
+
+            <div class="alert-row">
+              <span class="sev info"></span>
+              <div class="body">
+                <div class="title">Skill auto-disabled — okr_quality v1.3</div>
+                <div class="desc">Failure rate exceeded 10% over last 50 runs. Reverted to v1.2 automatically.</div>
+                <div class="meta">
+                  <span class="src">Skills</span>
+                  <span>·</span>
+                  <span>09:14 · 5h ago</span>
+                </div>
+              </div>
+              <div class="controls">
+                <button class="btn btn-ghost btn-sm">Dismiss</button>
+                <button class="btn btn-secondary btn-sm">View skill</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="home-col">
+
+        <!-- Pending approvals -->
+        <div class="r-card">
+          <h4>
+            Awaiting your approval
+            <span class="badge badge-primary count">12</span>
+          </h4>
+          <div class="pending-item">
+            <div class="title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
+              Update KR3 in Spirai
+            </div>
+            <div class="desc">"Reduce CRM TTM" — mark as at risk, projected slip 14d</div>
+            <div class="ctrls">
+              <span class="when">expires 47h 12m</span>
+              <span class="spacer"></span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+              <button class="btn btn-primary btn-sm">Approve</button>
+            </div>
+          </div>
+          <div class="pending-item">
+            <div class="title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              Reassign 4 JIRA tickets
+            </div>
+            <div class="desc">Bulk move from sprint 14 → sprint 15 due to capacity</div>
+            <div class="ctrls">
+              <span class="when">expires 41h</span>
+              <span class="spacer"></span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+              <button class="btn btn-primary btn-sm">Approve</button>
+            </div>
+          </div>
+          <div class="pending-item">
+            <div class="title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              Create 6 Spirai sub-OKRs
+            </div>
+            <div class="desc">Drafted from Q3 plan · D&amp;A team scope</div>
+            <div class="ctrls">
+              <span class="when">expires 36h</span>
+              <span class="spacer"></span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+              <button class="btn btn-primary btn-sm">Approve</button>
+            </div>
+          </div>
+          <div class="r-card-foot">
+            <a href="approvals.html" class="link-brand fs-12">See all 12 →</a>
+          </div>
+        </div>
+
+        <!-- Connector health -->
+        <div class="r-card">
+          <h4>Connector health<span class="spacer"></span><span class="h4-meta">live</span></h4>
+          <div class="connector-row">
+            <span class="status-dot online"></span>
+            <span class="name">JIRA</span>
+            <span class="meta">320ms · ok</span>
+          </div>
+          <div class="connector-row">
+            <span class="status-dot online"></span>
+            <span class="name">Spirai</span>
+            <span class="meta">180ms · ok</span>
+          </div>
+          <div class="connector-row">
+            <span class="status-dot warn"></span>
+            <span class="name">ServiceNow</span>
+            <span class="meta">2.4s · degraded</span>
+          </div>
+          <div class="connector-row">
+            <span class="status-dot online"></span>
+            <span class="name">Azure DevOps</span>
+            <span class="meta">410ms · ok</span>
+          </div>
+          <div class="connector-row">
+            <span class="status-dot offline"></span>
+            <span class="name">Confluence</span>
+            <span class="meta">— · paused</span>
+          </div>
+        </div>
+
+        <!-- Credits gauge -->
+        <div class="r-card">
+          <h4>Credits this month</h4>
+          <div class="credit-gauge">
+            <div class="row">
+              <span class="v">38,240<small> / 50,000</small></span>
+              <span class="pct">76%</span>
+            </div>
+            <div class="bar"><div data-fill="76"></div></div>
+            <div class="legend">
+              <span><i></i> Skills 21k</span>
+              <span><i class="b"></i> RAG 12k</span>
+              <span><i class="c"></i> Writes 5k</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="r-card">
+          <h4>Recent agent activity<span class="spacer"></span><a href="#" class="h4-link">All</a></h4>
+          <div class="activity-row">
+            <span class="ico ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+            <div class="body">
+              <strong>Created JIRA task IT-2041</strong>
+              <div class="sub">jira.write · 5 credits</div>
+            </div>
+            <span class="when">2m</span>
+          </div>
+          <div class="activity-row">
+            <span class="ico"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <div class="body">
+              <strong>Replied · Q3 sprint risk review</strong>
+              <div class="sub">skill=sprint_health · 8 credits</div>
+            </div>
+            <span class="when">4m</span>
+          </div>
+          <div class="activity-row">
+            <span class="ico warn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/></svg></span>
+            <div class="body">
+              <strong>Escalated INC-9921 to L3</strong>
+              <div class="sub">rule=p1_sla_breach</div>
+            </div>
+            <span class="when">14m</span>
+          </div>
+          <div class="activity-row">
+            <span class="ico ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+            <div class="body">
+              <strong>Morning digest sent — 6 recipients</strong>
+              <div class="sub">skill=daily_digest · 12 credits</div>
+            </div>
+            <span class="when">1h</span>
+          </div>
+          <div class="activity-row">
+            <span class="ico err"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18L18 6M6 6l12 12"/></svg></span>
+            <div class="body">
+              <strong>Skill failed — okr_quality v1.3</strong>
+              <div class="sub">auto-reverted to v1.2</div>
+            </div>
+            <span class="when">5h</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<app-notifications-panel></app-notifications-panel>
+
+<script src="components/sidebar.js"></script>
+<script src="components/topbar.js"></script>
+<script src="components/notifications-panel.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentMetric — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Brand — kırmızı + beyaz */
+  --brand-50:  #fff1f2;
+  --brand-100: #ffe1e3;
+  --brand-200: #ffc7cb;
+  --brand-300: #ffa0a7;
+  --brand-400: #ff6b75;
+  --brand-500: #f43f5e;
+  --brand-600: #e11d48;
+  --brand-700: #be123c;
+  --brand-800: #9f1239;
+  --brand-900: #7f1d3a;
+
+  /* Neutrals */
+  --n-0:   #ffffff;
+  --n-50:  #fafafa;
+  --n-100: #f5f5f5;
+  --n-150: #ececec;
+  --n-200: #e5e5e5;
+  --n-300: #d4d4d4;
+  --n-400: #a3a3a3;
+  --n-500: #737373;
+  --n-600: #525252;
+  --n-700: #404040;
+  --n-800: #262626;
+  --n-900: #171717;
+  --n-950: #0a0a0a;
+
+  /* Semantic */
+  --success: #10b981;
+  --success-bg: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --danger:  #ef4444;
+  --danger-bg: #fef2f2;
+  --info:    #3b82f6;
+  --info-bg: #eff6ff;
+
+  /* Surface tokens (light) */
+  --bg:        var(--n-50);
+  --surface:   var(--n-0);
+  --surface-2: var(--n-100);
+  --border:    var(--n-200);
+  --border-strong: var(--n-300);
+  --text:      var(--n-900);
+  --text-muted:var(--n-500);
+  --text-subtle:var(--n-400);
+
+  /* Type */
+  --font-sans: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radius */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-full: 9999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  --shadow-focus: 0 0 0 3px var(--brand-100);
+}
+
+[data-theme="dark"] {
+  --bg:        #0a0a0a;
+  --surface:   #131313;
+  --surface-2: #1a1a1a;
+  --border:    #262626;
+  --border-strong: #333333;
+  --text:      #fafafa;
+  --text-muted:#a3a3a3;
+  --text-subtle:#737373;
+  --shadow-focus: 0 0 0 3px rgba(225,29,72,0.25);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+  line-height: 1.5;
+}
+
+/* Layout */
+.shell { max-width: 1200px; margin: 0 auto; padding: 48px 32px 96px; }
+.hero {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 32px; margin-bottom: 48px;
+  flex-wrap: wrap; gap: 24px;
+}
+.hero-meta { display:flex; flex-direction:column; gap: 8px; }
+.kicker {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--brand-600);
+}
+h1 { font-size: 44px; line-height: 1.05; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
+h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 20px; }
+h3 { font-size: 18px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+p  { margin: 0; color: var(--text-muted); }
+
+.section { margin-bottom: 64px; }
+.section-head {
+  display:flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.section-head .num {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle);
+}
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-6 { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 900px) {
+  .grid-3, .grid-4, .grid-6 { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 32px; }
+}
+
+/* Card primitive */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+}
+.card-title { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500; }
+
+/* ============= LOGO ============= */
+.logo {
+  display: inline-flex; align-items: baseline;
+  font-weight: 600; font-size: 22px; letter-spacing: -0.025em;
+  color: var(--text);
+}
+.logo .agent { color: var(--brand-600); }
+.logo .metric { color: var(--text); }
+
+.logo-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 32px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer; transition: all 120ms ease;
+}
+.logo-card:hover { border-color: var(--brand-300); }
+.logo-card[data-active="true"] {
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 1px var(--brand-600);
+}
+.logo-card .label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ============= COLOR ============= */
+.swatch {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.swatch-chip {
+  height: 64px; border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.swatch-meta {
+  display:flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+}
+.swatch-meta .name { color: var(--text); font-weight: 500; }
+
+.scale {
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 0;
+  border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid var(--border);
+}
+.scale-step { height: 56px; position: relative; }
+.scale-step::after {
+  content: attr(data-step);
+  position: absolute; bottom: 4px; left: 4px;
+  font-family: var(--font-mono); font-size: 9px;
+  color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.2); padding: 1px 4px; border-radius: 3px;
+}
+.scale-step.light::after { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.4); }
+
+/* ============= TYPE ============= */
+.type-row {
+  display: grid; grid-template-columns: 100px 1fr;
+  gap: 16px; align-items: baseline;
+  padding: 16px 0; border-bottom: 1px dashed var(--border);
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-subtle); }
+.type-sample { color: var(--text); }
+
+.t-display { font-size: 56px; line-height: 1; letter-spacing: -0.025em; font-weight: 600; }
+.t-h1 { font-size: 36px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 600; }
+.t-h2 { font-size: 24px; line-height: 1.2; letter-spacing: -0.015em; font-weight: 600; }
+.t-h3 { font-size: 18px; line-height: 1.3; font-weight: 600; }
+.t-body-lg { font-size: 16px; line-height: 1.55; }
+.t-body { font-size: 14px; line-height: 1.5; }
+.t-sm { font-size: 13px; line-height: 1.45; }
+.t-xs { font-size: 12px; line-height: 1.4; color: var(--text-muted); }
+.t-mono { font-family: var(--font-mono); font-size: 13px; }
+.t-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; color: var(--text-muted); }
+
+/* ============= COMPONENTS ============= */
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 36px; padding: 0 14px;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  border: 1px solid transparent; border-radius: var(--r-md);
+  cursor: pointer; transition: all 120ms ease;
+  white-space: nowrap;
+}
+.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.btn-primary { background: var(--brand-600); color: var(--n-0); }
+.btn-primary:hover { background: var(--brand-700); }
+.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn-ghost { background: transparent; color: var(--text); }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-danger { background: var(--danger); color: var(--n-0); }
+.btn-danger:hover { filter: brightness(0.92); }
+.btn-sm { height: 30px; padding: 0 10px; font-size: 12px; }
+.btn-lg { height: 44px; padding: 0 18px; font-size: 14px; }
+.btn[disabled] { opacity: 0.45; pointer-events: none; }
+
+/* Input */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 12px; font-weight: 500; color: var(--text); }
+.input, .select, .textarea {
+  height: 36px; padding: 0 12px;
+  font-family: inherit; font-size: 13px; color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  width: 100%;
+  transition: all 120ms ease;
+}
+.input::placeholder { color: var(--text-subtle); }
+.input:hover, .select:hover { border-color: var(--n-400); }
+.input:focus, .select:focus, .textarea:focus {
+  outline: none; border-color: var(--brand-600); box-shadow: var(--shadow-focus);
+}
+.textarea { height: auto; min-height: 84px; padding: 10px 12px; resize: vertical; }
+.field-help { font-size: 11px; color: var(--text-muted); }
+
+/* Switch */
+.switch {
+  width: 36px; height: 20px; background: var(--n-300);
+  border-radius: var(--r-full); position: relative; cursor: pointer;
+  transition: background 150ms ease; flex-shrink: 0;
+}
+.switch::after {
+  content: ''; position: absolute;
+  width: 16px; height: 16px; top: 2px; left: 2px;
+  background: white; border-radius: 50%;
+  transition: transform 150ms ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.switch[data-on="true"] { background: var(--brand-600); }
+.switch[data-on="true"]::after { transform: translateX(16px); }
+
+/* Checkbox */
+.checkbox {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.checkbox[data-on="true"] {
+  background: var(--brand-600); border-color: var(--brand-600);
+}
+.checkbox[data-on="true"]::after {
+  content: ''; width: 8px; height: 5px;
+  border-left: 2px solid white; border-bottom: 2px solid white;
+  transform: rotate(-45deg) translate(1px,-1px);
+}
+
+/* Radio (segmented) */
+.segmented {
+  display: inline-flex;
+  background: var(--surface-2);
+  border-radius: var(--r-md); padding: 2px; gap: 2px;
+  border: 1px solid var(--border);
+}
+.segmented button {
+  height: 28px; padding: 0 12px; font-size: 12px; font-weight: 500;
+  background: transparent; border: none; border-radius: 5px;
+  color: var(--text-muted); cursor: pointer; font-family: inherit;
+}
+.segmented button[data-active="true"] {
+  background: var(--surface); color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px; font-weight: 500;
+  border-radius: var(--r-full);
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border);
+  height: 20px;
+}
+.badge-primary { background: var(--brand-50); color: var(--brand-700); border-color: var(--brand-200); }
+.badge-success { background: var(--success-bg); color: #047857; border-color: #a7f3d0; }
+.badge-warning { background: var(--warning-bg); color: #b45309; border-color: #fde68a; }
+.badge-danger  { background: var(--danger-bg);  color: #b91c1c; border-color: #fecaca; }
+.badge-info    { background: var(--info-bg);    color: #1d4ed8; border-color: #bfdbfe; }
+.badge-dot::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; display: inline-block;
+}
+
+[data-theme="dark"] .badge-primary { background: rgba(225,29,72,0.12); color: #fecdd3; border-color: rgba(225,29,72,0.3); }
+[data-theme="dark"] .badge-success { background: rgba(16,185,129,0.12); color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
+[data-theme="dark"] .badge-warning { background: rgba(245,158,11,0.12); color: #fcd34d; border-color: rgba(245,158,11,0.3); }
+[data-theme="dark"] .badge-danger  { background: rgba(239,68,68,0.12); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+[data-theme="dark"] .badge-info    { background: rgba(59,130,246,0.12); color: #93c5fd; border-color: rgba(59,130,246,0.3); }
+
+/* Avatar */
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+  color: white; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+}
+
+/* Status dot */
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+.status-dot.online  { background: var(--success); }
+.status-dot.warn    { background: var(--warning); }
+.status-dot.offline { background: var(--n-400); }
+.status-dot.error   { background: var(--danger); }
+.status-dot.online::after {
+  content: ''; position: absolute; inset: -3px;
+  border-radius: 50%; border: 1.5px solid var(--success);
+  opacity: 0.3; animation: ping 2s ease-out infinite;
+}
+@keyframes ping {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Tooltip-style nav item */
+.navitem {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--r-sm);
+  font-size: 13px; color: var(--text-muted); cursor: pointer;
+  transition: all 120ms ease;
+}
+.navitem:hover { background: var(--surface-2); color: var(--text); }
+.navitem[data-active="true"] {
+  background: var(--brand-50); color: var(--brand-700); font-weight: 500;
+}
+[data-theme="dark"] .navitem[data-active="true"] {
+  background: rgba(225,29,72,0.12); color: var(--brand-300);
+}
+.navitem svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* Table */
+.table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.table thead th {
+  text-align: left; font-weight: 500; font-size: 11px;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.table tbody td {
+  padding: 12px 14px; border-bottom: 1px solid var(--border);
+}
+.table tbody tr:hover { background: var(--surface-2); }
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; border-bottom: 1px solid var(--border);
+}
+.tab {
+  padding: 10px 14px; font-size: 13px; font-weight: 500;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: all 120ms ease;
+}
+.tab:hover { color: var(--text); }
+.tab[data-active="true"] {
+  color: var(--text); border-bottom-color: var(--brand-600);
+}
+
+/* Modal sample */
+.modal-sample {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+}
+.modal-icon {
+  width: 40px; height: 40px;
+  background: var(--brand-50);
+  border-radius: var(--r-md);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--brand-600);
+  margin-bottom: 12px;
+}
+[data-theme="dark"] .modal-icon { background: rgba(225,29,72,0.15); }
+
+/* Toast */
+.toast {
+  background: var(--n-900); color: var(--n-0);
+  padding: 12px 16px; border-radius: var(--r-md);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--n-800);
+}
+[data-theme="dark"] .toast { background: var(--surface); border-color: var(--border); }
+.toast-icon { color: var(--success); display: inline-flex; }
+
+/* Spacing scale viz */
+.spacing-row { display: flex; align-items: center; gap: 16px; padding: 8px 0; }
+.spacing-bar { background: var(--brand-100); height: 16px; border-radius: 3px; }
+[data-theme="dark"] .spacing-bar { background: rgba(225,29,72,0.25); }
+.spacing-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); width: 80px; }
+
+/* Radius viz */
+.radius-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.radius-block {
+  width: 64px; height: 64px;
+  background: var(--brand-50);
+  border: 1px solid var(--brand-200);
+}
+[data-theme="dark"] .radius-block { background: rgba(225,29,72,0.12); border-color: rgba(225,29,72,0.3); }
+
+/* Theme toggle */
+.theme-toggle {
+  position: fixed; top: 20px; right: 20px;
+  z-index: 100;
+  display: flex; gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 4px;
+}
+.theme-toggle button {
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: transparent; cursor: pointer; color: var(--text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.theme-toggle button[data-active="true"] {
+  background: var(--brand-600); color: white;
+}
+
+/* Brand demo header */
+.brand-demo {
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-900));
+  color: white;
+  padding: 56px 40px;
+  border-radius: var(--r-xl);
+  position: relative;
+  overflow: hidden;
+}
+.brand-demo::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 100%, rgba(255,255,255,0.12), transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(255,255,255,0.08), transparent 40%);
+}
+.brand-demo .logo { font-size: 28px; }
+.brand-demo .logo .agent { color: var(--brand-300); }
+.brand-demo .logo .metric { color: white; }
+.brand-demo .tagline {
+  margin-top: 24px; font-size: 32px; font-weight: 500;
+  letter-spacing: -0.02em; line-height: 1.15;
+  max-width: 600px; position: relative;
+}
+.brand-demo .sub {
+  margin-top: 12px; opacity: 0.7; max-width: 500px; position: relative;
+  font-size: 15px;
+}
+.brand-strip {
+  display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap;
+  position: relative;
+}
+.brand-strip .pill {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 12px; border-radius: var(--r-full);
+  font-size: 12px; font-weight: 500;
+  backdrop-filter: blur(8px);
+}
+
+/* Footer */
+.footer {
+  margin-top: 80px; padding-top: 32px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-muted);
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-links { display: flex; gap: 16px; }
+.footer-links a { color: var(--text-muted); text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button id="theme-light" data-active="true" title="Light">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+  </button>
+  <button id="theme-dark" title="Dark">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</div>
+
+<div class="shell">
+
+  <!-- ============== HEADER ============== -->
+  <div class="hero">
+    <div class="hero-meta">
+      <span class="kicker">Design System · v0.1</span>
+      <h1>AgentMetric.</h1>
+      <p style="max-width: 540px; margin-top: 8px;">The visual language behind the AgentMetric platform — components, tokens, and brand patterns for the CIO Agent and every product that follows.</p>
+    </div>
+    <div style="display:flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+      <span class="badge badge-primary badge-dot">Living document</span>
+      <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-subtle);">May 2026 · Foundation</span>
+    </div>
+  </div>
+
+  <!-- ============== BRAND ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Brand</h2>
+      <span class="num">01</span>
+    </div>
+
+    <div class="brand-demo">
+      <div class="logo" style="font-family: var(--font-sans);">
+        <span class="agent">agent</span><span class="metric">metric</span>
+      </div>
+      <div class="tagline">The control layer for enterprise AI agents.</div>
+      <div class="sub">A platform of role-aware, auditable agents — starting with the CIO Agent. Deployed on-premise, evaluated like production code.</div>
+      <div class="brand-strip">
+        <span class="pill">CIO Agent</span>
+        <span class="pill">IT Ops Agent · soon</span>
+        <span class="pill">Portfolio Agent · soon</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 32px;">Logo — wordmark options</h3>
+    <p style="margin: 4px 0 16px;">The wordmark is always set lowercase with a punctuation period. Pick the font that matches your tone.</p>
+    <div class="grid grid-4" id="logo-grid">
+      <div class="logo-card" data-active="true" data-font="'Geist', sans-serif">
+        <div class="logo" style="font-family: 'Geist', sans-serif;">
+          <span class="agent">agent</span><span class="metric">metric</span>
+        </div>
+        <span class="label">Geist · Default</span>
+      </div>
+      <div class="logo-card" data-font="'Inter', sans-serif">
+        <div class="logo" style="font-family: 'Inter', sans-serif;">
+          <span class="agent">agent</span><span class="metric">metric</span>
+        </div>
+        <span class="label">Inter</span>
+      </div>
+      <div class="logo-card" data-font="'Manrope', sans-serif">
+        <div class="logo" style="font-family: 'Manrope', sans-serif;">
+          <span class="agent">agent</span><span class="metric">metric</span>
+        </div>
+        <span class="label">Manrope</span>
+      </div>
+      <div class="logo-card" data-font="'Space Grotesk', sans-serif">
+        <div class="logo" style="font-family: 'Space Grotesk', sans-serif;">
+          <span class="agent">agent</span><span class="metric">metric</span>
+        </div>
+        <span class="label">Space Grotesk</span>
+      </div>
+    </div>
+    <p style="margin-top: 12px; font-size: 12px;">Click any option to preview it across the system.</p>
+  </section>
+
+  <!-- ============== COLOR ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Color</h2>
+      <span class="num">02</span>
+    </div>
+
+    <h3>Brand — Crimson</h3>
+    <p style="margin: 4px 0 16px;">The single accent that signals action, agent presence, and approval flow. Use sparingly.</p>
+    <div class="scale">
+      <div class="scale-step light" style="background: var(--brand-50)"  data-step="50"></div>
+      <div class="scale-step light" style="background: var(--brand-100)" data-step="100"></div>
+      <div class="scale-step light" style="background: var(--brand-200)" data-step="200"></div>
+      <div class="scale-step light" style="background: var(--brand-300)" data-step="300"></div>
+      <div class="scale-step" style="background: var(--brand-400)" data-step="400"></div>
+      <div class="scale-step" style="background: var(--brand-500)" data-step="500"></div>
+      <div class="scale-step" style="background: var(--brand-600)" data-step="600"></div>
+      <div class="scale-step" style="background: var(--brand-700)" data-step="700"></div>
+      <div class="scale-step" style="background: var(--brand-800)" data-step="800"></div>
+      <div class="scale-step" style="background: var(--brand-900)" data-step="900"></div>
+    </div>
+
+    <h3 style="margin-top: 28px;">Neutrals</h3>
+    <p style="margin: 4px 0 16px;">From paper to ink. 11 stops carry every surface, divider, and text level.</p>
+    <div class="scale">
+      <div class="scale-step light" style="background: var(--n-0); border-right: 1px solid var(--border);" data-step="0"></div>
+      <div class="scale-step light" style="background: var(--n-50)"  data-step="50"></div>
+      <div class="scale-step light" style="background: var(--n-100)" data-step="100"></div>
+      <div class="scale-step light" style="background: var(--n-200)" data-step="200"></div>
+      <div class="scale-step light" style="background: var(--n-300)" data-step="300"></div>
+      <div class="scale-step" style="background: var(--n-400)" data-step="400"></div>
+      <div class="scale-step" style="background: var(--n-500)" data-step="500"></div>
+      <div class="scale-step" style="background: var(--n-600)" data-step="600"></div>
+      <div class="scale-step" style="background: var(--n-700)" data-step="700"></div>
+      <div class="scale-step" style="background: var(--n-800)" data-step="800"></div>
+    </div>
+
+    <h3 style="margin-top: 28px;">Semantic</h3>
+    <p style="margin: 4px 0 16px;">For state, never for decoration. Always paired with an icon or label.</p>
+    <div class="grid grid-4">
+      <div class="swatch">
+        <div class="swatch-chip" style="background: var(--success)"></div>
+        <div class="swatch-meta"><span class="name">Success</span><span>#10b981</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-chip" style="background: var(--warning)"></div>
+        <div class="swatch-meta"><span class="name">Warning</span><span>#f59e0b</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-chip" style="background: var(--danger)"></div>
+        <div class="swatch-meta"><span class="name">Danger</span><span>#ef4444</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-chip" style="background: var(--info)"></div>
+        <div class="swatch-meta"><span class="name">Info</span><span>#3b82f6</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== TYPE ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Typography</h2>
+      <span class="num">03</span>
+    </div>
+
+    <p style="margin-bottom: 24px;">Sans-serif for everything UI. Mono for IDs, tokens, code, and any value the user might copy. Numbers always tabular.</p>
+
+    <div class="card">
+      <div class="type-row">
+        <span class="type-meta">Display · 56/60</span>
+        <span class="type-sample t-display">Approve in one click.</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">H1 · 36/40</span>
+        <span class="type-sample t-h1">Sprint health · Q3 review</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">H2 · 24/28</span>
+        <span class="type-sample t-h2">7 pending approvals across 3 connectors</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">H3 · 18/24</span>
+        <span class="type-sample t-h3">Open task in JIRA — IT-2041</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">Body L · 16/24</span>
+        <span class="type-sample t-body-lg">The agent flagged a 14-day delay on PROJ-118 and proposed a Draft update.</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">Body · 14/21</span>
+        <span class="type-sample t-body">Default body size used across rows, cards, and form fields. Reads cleanly on dense data screens.</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">Small · 13/19</span>
+        <span class="type-sample t-sm">Captions, helper text, and secondary metadata.</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">Mono · 13</span>
+        <span class="type-sample t-mono">jti: 7f4e2d-91a · idempotency · approved_by</span>
+      </div>
+      <div class="type-row">
+        <span class="type-meta">Label · 11</span>
+        <span class="type-sample t-label">Status · Owner · Last action</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SPACING + RADIUS ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Spacing &amp; radius</h2>
+      <span class="num">04</span>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-title">Spacing scale · 4px base</div>
+        <div class="spacing-row"><span class="spacing-meta">4px · xs</span><div class="spacing-bar" style="width: 4px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">8px · sm</span><div class="spacing-bar" style="width: 8px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">12px · md</span><div class="spacing-bar" style="width: 12px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">16px · lg</span><div class="spacing-bar" style="width: 16px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">24px · xl</span><div class="spacing-bar" style="width: 24px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">32px · 2xl</span><div class="spacing-bar" style="width: 32px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">48px · 3xl</span><div class="spacing-bar" style="width: 48px"></div></div>
+        <div class="spacing-row"><span class="spacing-meta">64px · 4xl</span><div class="spacing-bar" style="width: 64px"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Radius</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 8px;">
+          <div class="radius-card">
+            <div class="radius-block" style="border-radius: 4px"></div>
+            <span class="t-mono" style="font-size: 11px; color: var(--text-muted);">4 · xs</span>
+          </div>
+          <div class="radius-card">
+            <div class="radius-block" style="border-radius: 6px"></div>
+            <span class="t-mono" style="font-size: 11px; color: var(--text-muted);">6 · sm</span>
+          </div>
+          <div class="radius-card">
+            <div class="radius-block" style="border-radius: 8px"></div>
+            <span class="t-mono" style="font-size: 11px; color: var(--text-muted);">8 · md</span>
+          </div>
+          <div class="radius-card">
+            <div class="radius-block" style="border-radius: 12px"></div>
+            <span class="t-mono" style="font-size: 11px; color: var(--text-muted);">12 · lg</span>
+          </div>
+          <div class="radius-card">
+            <div class="radius-block" style="border-radius: 16px"></div>
+            <span class="t-mono" style="font-size: 11px; color: var(--text-muted);">16 · xl</span>
+          </div>
+        </div>
+
+        <div class="card-title" style="margin-top: 28px;">Elevation</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); height: 60px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">sm</div>
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); height: 60px; box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">md</div>
+          <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); height: 60px; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">lg</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== COMPONENTS ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Components</h2>
+      <span class="num">05</span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-title">Buttons</div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button class="btn btn-primary">Approve action</button>
+        <button class="btn btn-secondary">Edit before send</button>
+        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-danger">Reject</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+      </div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary">Default</button>
+        <button class="btn btn-primary btn-lg">Large</button>
+        <button class="btn btn-secondary btn-sm">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          With icon
+        </button>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="grid grid-2" style="margin-bottom: 16px;">
+      <div class="card">
+        <div class="card-title">Inputs</div>
+        <div style="display: grid; gap: 14px;">
+          <div class="field">
+            <label class="field-label">Alert name</label>
+            <input class="input" placeholder="Sprint velocity drop" value="Sprint velocity drop" />
+          </div>
+          <div class="field">
+            <label class="field-label">Source system</label>
+            <select class="select">
+              <option>JIRA</option><option>ServiceNow</option><option>Azure DevOps</option><option>Spirai</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Trigger description</label>
+            <textarea class="textarea" placeholder="Describe the condition…">Velocity drops &gt; 30% across two consecutive sprints</textarea>
+            <span class="field-help">The agent will structure this and ask for confirmation.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Toggles &amp; controls</div>
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="switch" data-on="true"></span>
+            <div>
+              <div style="font-size: 13px; font-weight: 500;">Autonomous mode</div>
+              <div style="font-size: 12px; color: var(--text-muted);">Agent acts then notifies — no approval step.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="switch" data-on="false"></span>
+            <div>
+              <div style="font-size: 13px; font-weight: 500;">Send to WhatsApp</div>
+              <div style="font-size: 12px; color: var(--text-muted);">Critical alerts only.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="checkbox" data-on="true"></span>
+            <span style="font-size: 13px;">JIRA</span>
+            <span class="checkbox" data-on="true" style="margin-left: 12px;"></span>
+            <span style="font-size: 13px;">ServiceNow</span>
+            <span class="checkbox" data-on="false" style="margin-left: 12px;"></span>
+            <span style="font-size: 13px;">Azure</span>
+          </div>
+          <div>
+            <div class="segmented">
+              <button data-active="true">Autonomous</button>
+              <button>Draft</button>
+              <button>Approval</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges + Status -->
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-title">Badges &amp; status</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <span class="badge">Default</span>
+        <span class="badge badge-primary">Agent</span>
+        <span class="badge badge-success badge-dot">Connected</span>
+        <span class="badge badge-warning badge-dot">Degraded</span>
+        <span class="badge badge-danger badge-dot">Offline</span>
+        <span class="badge badge-info">CIO</span>
+        <span class="badge">Draft · 5 credits</span>
+        <span class="badge badge-primary">Approval required</span>
+      </div>
+      <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 20px; align-items: center;">
+        <div style="display:flex; align-items:center; gap:8px;"><span class="status-dot online"></span><span style="font-size:13px;">JIRA · live</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span class="status-dot warn"></span><span style="font-size:13px;">ServiceNow · degraded</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span class="status-dot offline"></span><span style="font-size:13px;">Azure DevOps · idle</span></div>
+        <div style="display:flex; align-items:center; gap:8px;"><span class="status-dot error"></span><span style="font-size:13px;">Spirai · error</span></div>
+      </div>
+    </div>
+
+    <!-- Avatar + nav -->
+    <div class="grid grid-2" style="margin-bottom: 16px;">
+      <div class="card">
+        <div class="card-title">Avatar &amp; people</div>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <span class="avatar">SB</span>
+          <span class="avatar" style="background: linear-gradient(135deg, #6366f1, #4338ca);">EM</span>
+          <span class="avatar" style="background: linear-gradient(135deg, #14b8a6, #0f766e);">DA</span>
+          <span class="avatar" style="background: linear-gradient(135deg, #f59e0b, #b45309);">IT</span>
+          <span class="avatar" style="width:24px; height:24px; font-size:10px;">CR</span>
+        </div>
+        <div style="margin-top: 18px; display: flex; align-items: center; gap: 10px;">
+          <span class="avatar">SB</span>
+          <div style="line-height: 1.3;">
+            <div style="font-size: 13px; font-weight: 500;">Satılmış Bakan</div>
+            <div style="font-size: 11px; color: var(--text-muted);">CIO · Power user</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Navigation item</div>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <div class="navitem" data-active="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            ChatBot
+            <span class="badge badge-primary" style="margin-left: auto;">3</span>
+          </div>
+          <div class="navitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </div>
+          <div class="navitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Approvals
+            <span class="badge" style="margin-left: auto;">12</span>
+          </div>
+          <div class="navitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            Knowledge Base
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card" style="margin-bottom: 16px; overflow: hidden; padding: 0;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 14px; font-weight: 600;">Recent agent actions</div>
+          <div style="font-size: 12px; color: var(--text-muted);">Last 24 hours · 142 events</div>
+        </div>
+        <button class="btn btn-secondary btn-sm">View audit log</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th>Time</th><th>Action</th><th>Source</th><th>Owner</th><th>Status</th><th>Credits</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="t-mono" style="font-size: 12px; color: var(--text-muted);">14:22:08</td>
+            <td>Update task IT-2041 · status → In Review</td>
+            <td><span class="badge">JIRA</span></td>
+            <td><span class="avatar" style="width:22px;height:22px;font-size:10px;">EM</span></td>
+            <td><span class="badge badge-success badge-dot">Completed</span></td>
+            <td class="t-mono" style="font-size: 12px;">5</td>
+          </tr>
+          <tr>
+            <td class="t-mono" style="font-size: 12px; color: var(--text-muted);">14:18:51</td>
+            <td>Create OKR draft — Reduce SLA breaches</td>
+            <td><span class="badge">Spirai</span></td>
+            <td><span class="avatar" style="width:22px;height:22px;font-size:10px;">SB</span></td>
+            <td><span class="badge badge-warning badge-dot">Awaiting approval</span></td>
+            <td class="t-mono" style="font-size: 12px;">5</td>
+          </tr>
+          <tr>
+            <td class="t-mono" style="font-size: 12px; color: var(--text-muted);">14:11:03</td>
+            <td>Send escalation alert — INC-9921 unresolved 4h</td>
+            <td><span class="badge">ServiceNow</span></td>
+            <td><span class="avatar" style="width:22px;height:22px;font-size:10px;">DA</span></td>
+            <td><span class="badge badge-success badge-dot">Completed</span></td>
+            <td class="t-mono" style="font-size: 12px;">3</td>
+          </tr>
+          <tr>
+            <td class="t-mono" style="font-size: 12px; color: var(--text-muted);">14:02:47</td>
+            <td>Close task PROJ-118 · sprint complete</td>
+            <td><span class="badge">JIRA</span></td>
+            <td><span class="avatar" style="width:22px;height:22px;font-size:10px;">IT</span></td>
+            <td><span class="badge badge-danger badge-dot">Rejected</span></td>
+            <td class="t-mono" style="font-size: 12px;">5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tabs + modal + toast -->
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-title">Tabs</div>
+        <div class="tabs">
+          <span class="tab" data-active="true">Overview</span>
+          <span class="tab">Pending <span class="badge" style="margin-left:6px;">12</span></span>
+          <span class="tab">History</span>
+          <span class="tab">Settings</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Toast</div>
+        <div class="toast">
+          <span class="toast-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <div style="flex:1;">
+            <div style="font-weight: 500;">Approval sent</div>
+            <div style="font-size: 12px; opacity: 0.7;">Task IT-2041 updated in JIRA · 5 credits used</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="color: white; opacity: 0.6;">Undo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div style="margin-top: 16px; display: flex; justify-content: center; padding: 32px; background: var(--surface-2); border-radius: var(--r-lg); border: 1px dashed var(--border);">
+      <div class="modal-sample">
+        <div class="modal-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        </div>
+        <h3>Approval required</h3>
+        <p style="margin-top: 4px; font-size: 13px;">The agent wants to close <span class="t-mono" style="font-size: 12px;">PROJ-118</span> in JIRA. This action requires your explicit confirmation.</p>
+        <div style="background: var(--surface-2); padding: 12px; border-radius: var(--r-md); margin-top: 16px; font-size: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted);">Action</span><span class="t-mono">close_task</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--text-muted);">Source</span><span>JIRA</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Cost</span><span class="t-mono">5 credits</span></div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end;">
+          <button class="btn btn-ghost btn-sm">Reject</button>
+          <button class="btn btn-secondary btn-sm">Edit</button>
+          <button class="btn btn-primary btn-sm">Approve</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== USAGE ============== -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Patterns &amp; principles</h2>
+      <span class="num">06</span>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="badge badge-primary" style="margin-bottom: 12px;">Principle</div>
+        <h3>Crimson means action.</h3>
+        <p style="margin-top: 4px; font-size: 13px;">Brand red appears on primary actions, agent presence, and approval flow — never on decoration. If everything is red, nothing is.</p>
+      </div>
+      <div class="card">
+        <div class="badge badge-primary" style="margin-bottom: 12px;">Principle</div>
+        <h3>Auditable by default.</h3>
+        <p style="margin-top: 4px; font-size: 13px;">Every action shows its source, cost, and trail. IDs and timestamps in mono so they're scannable and copyable.</p>
+      </div>
+      <div class="card">
+        <div class="badge badge-primary" style="margin-bottom: 12px;">Principle</div>
+        <h3>Built mobile-first.</h3>
+        <p style="margin-top: 4px; font-size: 13px;">Approve on the train, configure on the desk. 390px is the design floor; every screen scales up from there.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>AgentMetric Design System · v0.1 · CIO Agent baseline</div>
+    <div class="footer-links">
+      <a href="#">Tokens</a>
+      <a href="#">Components</a>
+      <a href="#">Brand</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme toggle
+  const lightBtn = document.getElementById('theme-light');
+  const darkBtn = document.getElementById('theme-dark');
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    lightBtn.dataset.active = (t === 'light');
+    darkBtn.dataset.active  = (t === 'dark');
+  }
+  lightBtn.addEventListener('click', () => setTheme('light'));
+  darkBtn.addEventListener('click',  () => setTheme('dark'));
+
+  // Logo font picker
+  const logoCards = document.querySelectorAll('#logo-grid .logo-card');
+  logoCards.forEach(card => {
+    card.addEventListener('click', () => {
+      logoCards.forEach(c => c.removeAttribute('data-active'));
+      card.dataset.active = 'true';
+      // Apply to brand demo + hero
+      document.querySelectorAll('.brand-demo .logo, .hero h1').forEach(el => {
+        el.style.fontFamily = card.dataset.font;
+      });
+    });
+  });
+</script>
+</body>
+</html>
