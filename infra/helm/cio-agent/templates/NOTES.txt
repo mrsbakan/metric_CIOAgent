@@ -1,0 +1,23 @@
+CIO Agent has been deployed.
+
+Release:   {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+Version:   {{ .Chart.AppVersion }}
+
+Access:
+{{- if .Values.ingress.enabled }}
+  {{- range .Values.ingress.hosts }}
+  https://{{ .host }}
+  {{- end }}
+{{- else }}
+  kubectl port-forward svc/{{ .Release.Name }}-api 3001:3001 -n {{ .Release.Namespace }}
+  kubectl port-forward svc/{{ .Release.Name }}-web 3000:3000 -n {{ .Release.Namespace }}
+{{- end }}
+
+Vault initialization (first deploy only):
+  kubectl exec -n {{ .Release.Namespace }} vault-0 -- vault operator init
+  kubectl exec -n {{ .Release.Namespace }} vault-0 -- vault operator unseal <key>
+
+Health checks:
+  kubectl get pods -n {{ .Release.Namespace }}
+  kubectl get hpa   -n {{ .Release.Namespace }}

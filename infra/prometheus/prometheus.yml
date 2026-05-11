@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: cio-agent-dev
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # API Gateway / Backend services
+  - job_name: api
+    static_configs:
+      - targets: ["host.docker.internal:3001"]
+    metrics_path: /metrics
+
+  # Orchestrator
+  - job_name: orchestrator
+    static_configs:
+      - targets: ["host.docker.internal:3003"]
+    metrics_path: /metrics
+
+  # Redis — via redis_exporter (added when exporter is wired)
+  # - job_name: redis
+  #   static_configs:
+  #     - targets: ["redis-exporter:9121"]
+
+  # PostgreSQL — via postgres_exporter (added when exporter is wired)
+  # - job_name: postgres
+  #   static_configs:
+  #     - targets: ["postgres-exporter:9187"]
+
+  # Node exporter (system metrics on K8s nodes)
+  # - job_name: node
+  #   static_configs:
+  #     - targets: ["node-exporter:9100"]

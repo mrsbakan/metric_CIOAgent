@@ -1,0 +1,37 @@
+apiVersion: v2
+name: cio-agent
+description: CIO Agent — Enterprise AI Orchestration Platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - ai
+  - enterprise
+  - orchestration
+maintainers:
+  - name: Metric
+    email: platform@metric.net
+
+dependencies:
+  - name: postgresql
+    version: "15.5.38"
+    repository: https://charts.bitnami.com/bitnami
+    alias: postgresql
+    condition: postgresql.enabled
+  - name: postgresql
+    version: "15.5.38"
+    repository: https://charts.bitnami.com/bitnami
+    alias: postgresqlAudit
+    condition: postgresqlAudit.enabled
+  - name: redis
+    version: "19.6.4"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: vault
+    version: "0.28.1"
+    repository: https://helm.releases.hashicorp.com
+    condition: vault.enabled
+  - name: kube-prometheus-stack
+    version: "61.3.2"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: monitoring.enabled

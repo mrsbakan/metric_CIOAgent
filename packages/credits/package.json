@@ -1,0 +1,30 @@
+{
+  "name": "@cio-agent/credits",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./service": "./src/credit.service.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "test:unit": "jest --testPathPattern='credit\\.service\\.test\\.ts$'",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@cio-agent/db": "*",
+    "@cio-agent/redis": "*",
+    "@cio-agent/shared": "*"
+  },
+  "devDependencies": {
+    "@cio-agent/tsconfig": "*",
+    "@cio-agent/eslint-config": "*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.2",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.14"
+  }
+}

@@ -1,0 +1,68 @@
+# CIO Agent — Customer Values
+# Override defaults here. Do NOT include secrets — use existingSecret references.
+
+global:
+  imageRegistry: ""        # e.g. registry.customer.com
+  imagePullSecrets: []     # e.g. [name: regcred]
+  storageClass: ""         # e.g. standard, gp3
+
+# ── API ───────────────────────────────────────────────────────────────────────
+api:
+  image:
+    repository: cio-agent/api
+    tag: "0.1.0"
+  replicaCount: 2
+  env:
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
+
+# ── Web ───────────────────────────────────────────────────────────────────────
+web:
+  image:
+    repository: cio-agent/web
+    tag: "0.1.0"
+  replicaCount: 2
+  env:
+    NEXT_PUBLIC_API_URL: "https://cio-agent.example.com/api"
+
+# ── Ingress ───────────────────────────────────────────────────────────────────
+ingress:
+  enabled: true
+  hosts:
+    - host: cio-agent.example.com     # ← change to customer domain
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: api
+        - path: /
+          pathType: Prefix
+          service: web
+  tls:
+    - secretName: cio-agent-tls       # ← pre-create this secret
+      hosts:
+        - cio-agent.example.com
+
+# ── PostgreSQL (main) ─────────────────────────────────────────────────────────
+postgresql:
+  primary:
+    persistence:
+      size: 50Gi                      # ← size to expected data volume
+
+# ── PostgreSQL (audit) ────────────────────────────────────────────────────────
+postgresqlAudit:
+  primary:
+    persistence:
+      size: 100Gi                     # ← audit data grows; provision generously
+
+# ── Redis ─────────────────────────────────────────────────────────────────────
+redis:
+  master:
+    persistence:
+      size: 10Gi
+
+# ── Monitoring ────────────────────────────────────────────────────────────────
+monitoring:
+  enabled: true
+
+kube-prometheus-stack:
+  grafana:
+    adminPassword: ""                 # ← set via --set or sealed secret

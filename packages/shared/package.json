@@ -1,0 +1,20 @@
+{
+  "name": "@cio-agent/shared",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    "./types": "./src/types/index.ts",
+    "./constants": "./src/constants/index.ts",
+    "./errors": "./src/errors/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "@cio-agent/tsconfig": "*",
+    "@cio-agent/eslint-config": "*"
+  }
+}

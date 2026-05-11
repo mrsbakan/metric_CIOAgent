@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+dist
+**/.next
+**/coverage
+.turbo
+**/.turbo
+.git
+.github
+*.log
+.env
+.env.*
+*.pem
+*.key
+vault-token

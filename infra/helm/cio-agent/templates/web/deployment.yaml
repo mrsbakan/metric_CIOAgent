@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cio-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cio-agent.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        {{- include "cio-agent.labels" . | nindent 8 }}
+        app.kubernetes.io/component: web
+    spec:
+      {{- include "cio-agent.imagePullSecrets" . | nindent 6 }}
+      serviceAccountName: {{ .Release.Name }}-web
+      securityContext:
+        runAsNonRoot: {{ .Values.web.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.web.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.web.securityContext.runAsGroup }}
+      containers:
+        - name: web
+          image: {{ include "cio-agent.image" (dict "global" .Values.global "image" .Values.web.image) }}
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.web.service.port }}
+              protocol: TCP
+          env:
+            {{- range $k, $v := .Values.web.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          securityContext:
+            readOnlyRootFilesystem: {{ .Values.web.securityContext.readOnlyRootFilesystem }}
+            allowPrivilegeEscalation: {{ .Values.web.securityContext.allowPrivilegeEscalation }}
+            capabilities:
+              drop: {{ .Values.web.securityContext.capabilities.drop | toJson }}
+          livenessProbe:
+            {{- toYaml .Values.web.probes.liveness | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.web.probes.readiness | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.web.probes.startup | nindent 12 }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: next-cache
+              mountPath: /app/.next/cache
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: next-cache
+          emptyDir: {}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              {{- include "cio-agent.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: web

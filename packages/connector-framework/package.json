@@ -1,0 +1,30 @@
+{
+  "name": "@cio-agent/connector-framework",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./errors": "./src/errors.ts",
+    "./interface": "./src/interface.ts",
+    "./base": "./src/base.ts"
+  },
+  "scripts": {
+    "test:unit": "jest",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@cio-agent/shared": "*"
+  },
+  "devDependencies": {
+    "@cio-agent/tsconfig": "*",
+    "@cio-agent/eslint-config": "*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.2",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.14"
+  }
+}

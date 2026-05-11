@@ -1,0 +1,298 @@
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# ── API (NestJS) ──────────────────────────────────────────────────────────────
+api:
+  image:
+    repository: cio-agent/api
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 2
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+  probes:
+    liveness:
+      httpGet:
+        path: /health
+        port: 3001
+      initialDelaySeconds: 15
+      periodSeconds: 20
+      failureThreshold: 3
+    readiness:
+      httpGet:
+        path: /health/ready
+        port: 3001
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      failureThreshold: 3
+    startup:
+      httpGet:
+        path: /health
+        port: 3001
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 24
+
+  hpa:
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+
+  service:
+    type: ClusterIP
+    port: 3001
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: [ALL]
+
+  env:
+    NODE_ENV: production
+    PORT: "3001"
+    LOG_LEVEL: info
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
+    OTEL_SERVICE_NAME: cio-agent-api
+
+  vault:
+    role: cio-agent-api
+    secretPaths:
+      - secret/data/cio-agent/db
+      - secret/data/cio-agent/redis
+      - secret/data/cio-agent/jwt
+
+# ── Web (Next.js) ─────────────────────────────────────────────────────────────
+web:
+  image:
+    repository: cio-agent/web
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 2
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  probes:
+    liveness:
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 15
+      periodSeconds: 20
+      failureThreshold: 3
+    readiness:
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      failureThreshold: 3
+    startup:
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 24
+
+  hpa:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: [ALL]
+
+  env:
+    NODE_ENV: production
+    NEXT_PUBLIC_API_URL: ""
+
+# ── Ingress ───────────────────────────────────────────────────────────────────
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+  hosts:
+    - host: cio-agent.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: api
+        - path: /
+          pathType: Prefix
+          service: web
+  tls:
+    - secretName: cio-agent-tls
+      hosts:
+        - cio-agent.example.com
+
+# ── PostgreSQL (main) ─────────────────────────────────────────────────────────
+postgresql:
+  enabled: true
+  image:
+    repository: pgvector/pgvector
+    tag: pg16
+  auth:
+    database: cio_agent
+    username: cio_agent_app
+    existingSecret: cio-agent-postgres-secret
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+    initdb:
+      scriptsConfigMap: cio-agent-postgres-init
+
+# ── PostgreSQL (audit) ────────────────────────────────────────────────────────
+postgresqlAudit:
+  enabled: true
+  auth:
+    database: cio_agent_audit
+    username: cio_agent_audit_app
+    existingSecret: cio-agent-postgres-audit-secret
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+  primary:
+    persistence:
+      enabled: true
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    initdb:
+      scriptsConfigMap: cio-agent-postgres-audit-init
+
+# ── Redis ─────────────────────────────────────────────────────────────────────
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    existingSecret: cio-agent-redis-secret
+    existingSecretPasswordKey: password
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  commonConfiguration: |-
+    appendonly yes
+    appendfsync everysec
+    maxmemory-policy noeviction
+
+# ── HashiCorp Vault ───────────────────────────────────────────────────────────
+vault:
+  enabled: true
+  server:
+    dev:
+      enabled: false
+    ha:
+      enabled: false
+    standalone:
+      enabled: true
+      config: |
+        ui = true
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+    dataStorage:
+      enabled: true
+      size: 10Gi
+  injector:
+    enabled: true
+
+# ── Monitoring (kube-prometheus-stack) ───────────────────────────────────────
+monitoring:
+  enabled: true
+
+kube-prometheus-stack:
+  grafana:
+    adminPassword: change_me
+    persistence:
+      enabled: true
+      size: 5Gi
+    sidecar:
+      dashboards:
+        enabled: true
+  prometheus:
+    prometheusSpec:
+      retention: 30d
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            resources:
+              requests:
+                storage: 20Gi
+  alertmanager:
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            resources:
+              requests:
+                storage: 2Gi

@@ -1,0 +1,141 @@
+{
+  "title": "CIO Agent — Service Health",
+  "uid": "cio-service-health",
+  "tags": ["cio-agent", "infrastructure"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": { "from": "now-3h", "to": "now" },
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "id": 1,
+      "title": "Active Agent Sessions",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "sum(cio_agent_sessions_total{state!~\"COMPLETED|FAILED\"}) or vector(0)",
+        "legendFormat": "Active"
+      }],
+      "options": { "colorMode": "background", "graphMode": "none" }
+    },
+    {
+      "id": 2,
+      "title": "Pending Approvals",
+      "type": "stat",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "sum(cio_agent_pending_approvals) or vector(0)",
+        "legendFormat": "Pending"
+      }],
+      "options": { "colorMode": "background", "thresholds": { "steps": [
+        { "value": 0, "color": "green" },
+        { "value": 10, "color": "yellow" },
+        { "value": 50, "color": "red" }
+      ]}}
+    },
+    {
+      "id": 3,
+      "title": "LLM p95 Latency (s)",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "histogram_quantile(0.95, sum(rate(cio_llm_call_duration_seconds_bucket[5m])) by (le))",
+        "legendFormat": "p95"
+      }],
+      "options": { "colorMode": "background", "thresholds": { "steps": [
+        { "value": 0, "color": "green" },
+        { "value": 4, "color": "yellow" },
+        { "value": 8, "color": "red" }
+      ]}, "unit": "s" }
+    },
+    {
+      "id": 4,
+      "title": "Connector Health",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "cio_connector_health",
+        "legendFormat": "{{connector_type}}"
+      }],
+      "options": { "colorMode": "background", "thresholds": { "steps": [
+        { "value": 0, "color": "red" },
+        { "value": 1, "color": "green" }
+      ]}}
+    },
+    {
+      "id": 5,
+      "title": "DLQ Events",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 0, "w": 4, "h": 4 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "sum(increase(cio_connector_dlq_total[1h])) or vector(0)",
+        "legendFormat": "DLQ (1h)"
+      }],
+      "options": { "colorMode": "background", "thresholds": { "steps": [
+        { "value": 0, "color": "green" },
+        { "value": 1, "color": "red" }
+      ]}}
+    },
+    {
+      "id": 6,
+      "title": "Agent State Transitions / min",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "sum by (from_state, to_state) (rate(cio_agent_state_transition_duration_seconds_count[1m]))",
+        "legendFormat": "{{from_state}} → {{to_state}}"
+      }]
+    },
+    {
+      "id": 7,
+      "title": "LLM Call Duration (p50 / p95 / p99)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "uid": "prometheus" },
+          "expr": "histogram_quantile(0.50, sum(rate(cio_llm_call_duration_seconds_bucket[5m])) by (le, provider))",
+          "legendFormat": "p50 {{provider}}"
+        },
+        {
+          "datasource": { "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum(rate(cio_llm_call_duration_seconds_bucket[5m])) by (le, provider))",
+          "legendFormat": "p95 {{provider}}"
+        },
+        {
+          "datasource": { "uid": "prometheus" },
+          "expr": "histogram_quantile(0.99, sum(rate(cio_llm_call_duration_seconds_bucket[5m])) by (le, provider))",
+          "legendFormat": "p99 {{provider}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Credit Consumption Rate / min",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "sum by (action_type) (rate(cio_credits_consumed_total[1m]))",
+        "legendFormat": "{{action_type}}"
+      }]
+    },
+    {
+      "id": 9,
+      "title": "HTTP Request Duration p95 by Route",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "targets": [{
+        "datasource": { "uid": "prometheus" },
+        "expr": "histogram_quantile(0.95, sum(rate(cio_http_request_duration_seconds_bucket[5m])) by (le, route))",
+        "legendFormat": "{{route}}"
+      }]
+    }
+  ]
+}

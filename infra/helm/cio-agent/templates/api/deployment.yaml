@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cio-agent.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cio-agent.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        {{- include "cio-agent.labels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: {{ .Values.api.vault.role | quote }}
+        {{- range .Values.api.vault.secretPaths }}
+        vault.hashicorp.com/agent-inject-secret-{{ . | replace "/" "-" | trimPrefix "secret-data-" }}: {{ . | quote }}
+        {{- end }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.api.service.port | quote }}
+        prometheus.io/path: "/metrics"
+    spec:
+      {{- include "cio-agent.imagePullSecrets" . | nindent 6 }}
+      serviceAccountName: {{ .Release.Name }}-api
+      securityContext:
+        runAsNonRoot: {{ .Values.api.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.api.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.api.securityContext.runAsGroup }}
+      containers:
+        - name: api
+          image: {{ include "cio-agent.image" (dict "global" .Values.global "image" .Values.api.image) }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.api.service.port }}
+              protocol: TCP
+          env:
+            {{- range $k, $v := .Values.api.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          securityContext:
+            readOnlyRootFilesystem: {{ .Values.api.securityContext.readOnlyRootFilesystem }}
+            allowPrivilegeEscalation: {{ .Values.api.securityContext.allowPrivilegeEscalation }}
+            capabilities:
+              drop: {{ .Values.api.securityContext.capabilities.drop | toJson }}
+          livenessProbe:
+            {{- toYaml .Values.api.probes.liveness | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.api.probes.readiness | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.api.probes.startup | nindent 12 }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              {{- include "cio-agent.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: api

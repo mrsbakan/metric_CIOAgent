@@ -1,0 +1,32 @@
+{
+  "name": "@cio-agent/redis",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./credits": "./src/credits.ts",
+    "./lock": "./src/lock.ts",
+    "./streams": "./src/streams.ts",
+    "./keys": "./src/keys.ts"
+  },
+  "scripts": {
+    "test:unit": "jest --testPathPattern='credits\\.test\\.ts$'",
+    "test:integration": "TEST_TYPE=integration jest --testPathPattern='race\\.test\\.ts$'",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.2"
+  },
+  "devDependencies": {
+    "@cio-agent/tsconfig": "*",
+    "@cio-agent/eslint-config": "*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.2",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.14"
+  }
+}

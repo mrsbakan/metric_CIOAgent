@@ -1,0 +1,56 @@
+# Vault Agent Injector — Pod Annotation Template
+# Add these annotations to any Deployment/StatefulSet pod spec that needs secrets.
+# The Vault Agent sidecar is injected automatically by the Vault Injector webhook.
+#
+# Usage: copy relevant annotations into the pod spec of each service deployment.
+
+# ─── Required on every pod that needs secrets ─────────────────────────────────
+annotations:
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/agent-inject-status: "update"
+  vault.hashicorp.com/role: "cio-agent"
+  vault.hashicorp.com/agent-pre-populate-only: "false"
+  vault.hashicorp.com/agent-revoke-on-shutdown: "true"
+
+  # ── PostgreSQL (main DB) ────────────────────────────────────────────────────
+  vault.hashicorp.com/agent-inject-secret-postgres: "secret/cioagent/data/production/system/postgres"
+  vault.hashicorp.com/agent-inject-template-postgres: |
+    {{- with secret "secret/cioagent/data/production/system/postgres" -}}
+    export POSTGRES_HOST="{{ .Data.data.host }}"
+    export POSTGRES_PORT="{{ .Data.data.port }}"
+    export POSTGRES_DB="{{ .Data.data.db }}"
+    export POSTGRES_USER="{{ .Data.data.user }}"
+    export POSTGRES_PASSWORD="{{ .Data.data.password }}"
+    {{- end }}
+  vault.hashicorp.com/agent-inject-file-postgres: "postgres.env"
+
+  # ── PostgreSQL (audit DB) ───────────────────────────────────────────────────
+  vault.hashicorp.com/agent-inject-secret-postgres-audit: "secret/cioagent/data/production/system/postgres-audit"
+  vault.hashicorp.com/agent-inject-template-postgres-audit: |
+    {{- with secret "secret/cioagent/data/production/system/postgres-audit" -}}
+    export AUDIT_POSTGRES_HOST="{{ .Data.data.host }}"
+    export AUDIT_POSTGRES_PORT="{{ .Data.data.port }}"
+    export AUDIT_POSTGRES_DB="{{ .Data.data.db }}"
+    export AUDIT_POSTGRES_USER="{{ .Data.data.user }}"
+    export AUDIT_POSTGRES_PASSWORD="{{ .Data.data.password }}"
+    {{- end }}
+  vault.hashicorp.com/agent-inject-file-postgres-audit: "postgres-audit.env"
+
+  # ── Redis ───────────────────────────────────────────────────────────────────
+  vault.hashicorp.com/agent-inject-secret-redis: "secret/cioagent/data/production/system/redis"
+  vault.hashicorp.com/agent-inject-template-redis: |
+    {{- with secret "secret/cioagent/data/production/system/redis" -}}
+    export REDIS_HOST="{{ .Data.data.host }}"
+    export REDIS_PORT="{{ .Data.data.port }}"
+    export REDIS_PASSWORD="{{ .Data.data.password }}"
+    {{- end }}
+  vault.hashicorp.com/agent-inject-file-redis: "redis.env"
+
+  # ── JWT Keys ────────────────────────────────────────────────────────────────
+  vault.hashicorp.com/agent-inject-secret-jwt: "secret/cioagent/data/production/system/jwt"
+  vault.hashicorp.com/agent-inject-template-jwt: |
+    {{- with secret "secret/cioagent/data/production/system/jwt" -}}
+    {{ .Data.data.private_key }}
+    {{- end }}
+  vault.hashicorp.com/agent-inject-file-jwt: "jwt.private.pem"
+  vault.hashicorp.com/agent-inject-perms-jwt: "0400"

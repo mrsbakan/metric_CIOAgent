@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(mkdir -p /Users/satilmisbakan/Desktop/myProject/CIOAgent/apps/web /Users/satilmisbakan/Desktop/myProject/CIOAgent/apps/api /Users/satilmisbakan/Desktop/myProject/CIOAgent/packages/shared /Users/satilmisbakan/Desktop/myProject/CIOAgent/packages/tsconfig /Users/satilmisbakan/Desktop/myProject/CIOAgent/packages/eslint-config)",
+      "Bash(npm install *)",
+      "Bash(docker compose *)",
+      "Bash(npm show *)",
+      "Bash(node -e \"import\\('@cio-agent/observability/metrics'\\).then\\(m => console.log\\('metrics OK:', Object.keys\\(m\\).length, 'exports'\\)\\)\")",
+      "Bash(mkdir -p /Users/satilmisbakan/Desktop/myProject/CIOAgent/.github/workflows)",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -v \"^@cio-agent/api:$\")",
+      "Bash(wait)",
+      "Bash(npm info *)",
+      "Bash(npx tsc *)"
+    ],
+    "additionalDirectories": [
+      "/Users/satilmisbakan/Desktop/myProject/CIOAgent/apps",
+      "/Users/satilmisbakan/Desktop/myProject/CIOAgent/.github"
+    ]
+  }
+}

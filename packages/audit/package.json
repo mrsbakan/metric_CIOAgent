@@ -1,0 +1,28 @@
+{
+  "name": "@cio-agent/audit",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./service": "./src/audit.service.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "test:unit": "jest --testPathPattern='audit\\.service\\.test\\.ts$'",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@cio-agent/db": "*"
+  },
+  "devDependencies": {
+    "@cio-agent/tsconfig": "*",
+    "@cio-agent/eslint-config": "*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.2",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.14"
+  }
+}
